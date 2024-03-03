@@ -5,8 +5,8 @@ from . import converters
 register_converter(converters.FourDigitYearConverter, "year4")
 
 urlpatterns = [
-    path('', views.index),
-    path('cat/<int:cat_id>/', views.categories),
-    path('archive/<year4:year>', views.archive),
+    path('', views.index, name='home'),
+    path('cat/<int:cat_id>/', views.categories, name='cat_id'),
+    path('archive/<year4:year>', views.archive, name="archive"),
 ]
 
