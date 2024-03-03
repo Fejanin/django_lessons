@@ -1,12 +1,15 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.template.loader import render_to_string
 
 
 # Create your views here.
 
 def index(request):
-    return HttpResponse('Страница о роботах.')
+    # t = render_to_string('robots/index.html')
+    # return HttpResponse(t)
+    return render(request, 'robots/index.html')
 
 
 def categories(request, cat_id):
