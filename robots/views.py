@@ -4,12 +4,24 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 
 
-# Create your views here.
+menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
 
 def index(request):
     # t = render_to_string('robots/index.html')
     # return HttpResponse(t)
-    return render(request, 'robots/index.html')
+    data = {
+        'title': 'Главная страница',
+        'menu': menu,
+    }
+    return render(request, 'robots/index.html', context=data)
+
+
+def about(request):
+    data = {
+        'title': 'О нас',
+        'menu': menu,
+    }
+    return render(request, 'robots/about.html', context=data)
 
 
 def categories(request, cat_id):
