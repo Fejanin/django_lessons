@@ -12,6 +12,8 @@ def index(request):
     data = {
         'title': 'Главная страница',
         'menu': menu,
+        'float': 3.14,
+        'str': 'stRing'
     }
     return render(request, 'robots/index.html', context=data)
 
