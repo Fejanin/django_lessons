@@ -5,10 +5,20 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    <p>{{ menu }}</p>
+    <p>{{ menu|join:" | " }}</p>
     <h1>{{ title }}</h1>
-    <p>Фильтр add - производит сложение целых чисел: {{ float|add:"50" }}</p>
-    <p>Фильтр capfirst - преобразует первый символ строки в заглавную букву: {{ str|capfirst }}</p>
-    <p>Фильтр cut - удаляет из строки указанный символ: {{ str|cut:"R" }}</p>
+    <ul>
+        {% for p in posts %}
+            {% if not p.is_published %}
+                <li>
+                    <h2>{{ p.title }}</h2>
+                    <p>{{ p.content }}</p>
+                    {% if not forloop.last %}
+                        <hr>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
 </body>
 </html>

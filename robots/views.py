@@ -6,14 +6,17 @@ from django.template.loader import render_to_string
 
 menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
 
+data_db = [
+    {'id': 1, 'title': 'QUANTEC PA Arctic', 'content': 'Робот функционирующий при экстремально низких температурах. Он создан для работы преимущественно в морозильных камерах, при температурах до -30 °C.', 'is_published': True},
+    {'id': 2, 'title': 'FANUC M-2000iA/1200', 'content': 'пятиосевой грузоподъемный робот поднимающий до 1200 кг и перемещающий этот груз на расстояние до 3,7 м — идеален в качестве погрузчика, так как работает без участия человека, что практически сводит к нулю опасность травматизма.', 'is_published': False},
+    {'id': 3, 'title': 'UR10', 'content': 'Самый крупный из манипуляторов Universal Robots и это коллаборативный робот, проще говоря — он создан для работы с другим оборудованием и помощи в работе человеку.', 'is_published': True},
+]
+
 def index(request):
-    # t = render_to_string('robots/index.html')
-    # return HttpResponse(t)
     data = {
-        'title': 'Главная страница',
+        'title': 'Главная страница о роботах.',
         'menu': menu,
-        'float': 3.14,
-        'str': 'stRing'
+        'posts': data_db,
     }
     return render(request, 'robots/index.html', context=data)
 
