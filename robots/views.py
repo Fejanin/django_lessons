@@ -4,7 +4,12 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 
 
-menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
+menu = [
+    {'title': 'О сайте', 'url_name': 'about'},
+    {'title': 'Добавить статью', 'url_name': 'addpage'},
+    {'title': 'Обратная связь', 'url_name': 'contact'},
+    {'title': 'Войти', 'url_name': 'login'},
+]
 
 data_db = [
     {'id': 1, 'title': 'QUANTEC PA Arctic', 'content': 'Робот функционирующий при экстремально низких температурах. Он создан для работы преимущественно в морозильных камерах, при температурах до -30 °C.', 'is_published': True},
@@ -29,19 +34,20 @@ def about(request):
     return render(request, 'robots/about.html', context=data)
 
 
-def categories(request, cat_id):
-    return HttpResponse(f'<h1>Статьи по категориям.</h1><p>cat_id: {cat_id}</p>')
+def show_post(request, post_id):
+    return HttpResponse(f'Отображение статьи с id: {post_id}.')
 
 
-def archive(request, year):
-    if year == 1950:
-        uri = reverse('cat_id', args=(1, ))
-        return redirect(uri)
-    if year > 2024:  # можно использовать time, получив значение текущего года
-        raise Http404()
-    if year < 2000:
-        return redirect('home')  # временное перемещение (302); ('/', permanent=True) ==> постоянное (301)
-    return HttpResponse(f'<h1>Архив по годам.</h1><p>{year}</p>')
+def addpage(request):
+    return HttpResponse('Добавление статьи.')
+
+
+def contact(request):
+    return HttpResponse('Обратная связь.')
+
+
+def login(request):
+    return HttpResponse('Авторизация.')
 
 
 def page_not_found(request, exception):
