@@ -1,4 +1,5 @@
 {% load static %}
+{% load robots_tags %}
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -8,6 +9,7 @@
     <link type="text/css" rel="stylesheet" href="{% static 'robots/css/styles.css' %}">
 </head>
 <body>
+    {% show_categories cat_selected %}
     <ul>
         <li>
             <a href="{% url 'home' %}">Главная страница о роботах</a>

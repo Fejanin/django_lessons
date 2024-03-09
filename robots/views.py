@@ -32,11 +32,19 @@ data_db = [
     },
 ]
 
+cat_db = [
+    {'id': 1, 'name': 'Промышленные'},
+    {'id': 2, 'name': 'Гуманоидные'},
+    {'id': 3, 'name': 'Анималистичные'},
+    {'id': 4, 'name': 'Летательные'},
+]
+
 def index(request):
     data = {
         'title': 'Главная страница о роботах.',
         'menu': menu,
         'posts': data_db,
+        'cat_selected': 0,
     }
     return render(request, 'robots/index.html', context=data)
 
@@ -63,6 +71,16 @@ def contact(request):
 
 def login(request):
     return HttpResponse('Авторизация.')
+
+
+def show_category(request, cat_id):
+    data = {
+        'title': 'Главная страница о роботах.',
+        'menu': menu,
+        'posts': data_db,
+        'cat_selected': cat_id,
+    }
+    return render(request, 'robots/index.html', context=data)
 
 
 def page_not_found(request, exception):

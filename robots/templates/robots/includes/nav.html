@@ -1,6 +1,10 @@
+{% load robots_tags %}
+
+{% get_categories as robots_categories %}
+
 <nav>
-    <h3>{{ title }}</h3>
-    <a href="#">Промышленные</a> |
-    <a href="#">Гуманоидные</a> |
-    <a href="#">Анималистичные</a>
+    {% for cat in robots_categories %}
+        <a href="{% url 'category' cat.id %}">{{ cat.name }}</a>
+        {% if not forloop.last %} | {% endif %}
+    {% endfor %}
 </nav>
