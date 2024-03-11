@@ -10,7 +10,7 @@
                     {% autoescape off %}
                     <p>{{ p.content|linebreaks|truncatewords:10 }}</p>
                     {% endautoescape %}
-                    <p><a href="{% url 'post' p.id %}">Читать пост</a></p>
+                    <p><a href="{{ p.get_absolute_url }}">Читать пост</a></p>
                     {% if not forloop.last %}
                         <hr>
                     {% endif %}k

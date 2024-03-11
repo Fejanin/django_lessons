@@ -1,7 +1,8 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
+from .models import Robot
 
 
 menu = [
@@ -40,10 +41,11 @@ cat_db = [
 ]
 
 def index(request):
+    posts = Robot.objects.filter(is_published=1)
     data = {
         'title': 'Главная страница о роботах.',
         'menu': menu,
-        'posts': data_db,
+        'posts': posts,
         'cat_selected': 0,
     }
     return render(request, 'robots/index.html', context=data)
@@ -57,8 +59,15 @@ def about(request):
     return render(request, 'robots/about.html', context=data)
 
 
-def show_post(request, post_id):
-    return HttpResponse(f'Отображение статьи с id: {post_id}.')
+def show_post(request, post_slug):
+    post = get_object_or_404(Robot, slug=post_slug)
+    data = {
+        'title': 'Главная страница о роботах.',
+        'menu': menu,
+        'post': post,
+        'cat_selected': 1,
+    }
+    return render(request, 'robots/post.html', context=data)
 
 
 def addpage(request):
