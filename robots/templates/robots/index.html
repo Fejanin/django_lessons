@@ -4,18 +4,16 @@
     <h1>{{ title }}</h1>
     <ul>
         {% for p in posts %}
-            {% if p.is_published %}
-                <li>
-                    <h2>{{ p.title }}</h2>
-                    {% autoescape off %}
-                    <p>{{ p.content|linebreaks|truncatewords:10 }}</p>
-                    {% endautoescape %}
-                    <p><a href="{{ p.get_absolute_url }}">Читать пост</a></p>
-                    {% if not forloop.last %}
-                        <hr>
-                    {% endif %}k
-                </li>
-            {% endif %}
+            <li>
+                <h2>{{ p.title }}</h2>
+                {% autoescape off %}
+                <p>{{ p.content|linebreaks|truncatewords:10 }}</p>
+                {% endautoescape %}
+                <p><a href="{{ p.get_absolute_url }}">Читать пост</a></p>
+                {% if not forloop.last %}
+                    <hr>
+                {% endif %}k
+            </li>
         {% endfor %}
     </ul>
     {% include 'robots/includes/nav.html' %}

@@ -41,7 +41,7 @@ cat_db = [
 ]
 
 def index(request):
-    posts = Robot.objects.filter(is_published=1)
+    posts = Robot.published.all()
     data = {
         'title': 'Главная страница о роботах.',
         'menu': menu,
