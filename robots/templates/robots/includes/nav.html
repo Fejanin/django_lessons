@@ -1,10 +1,8 @@
 {% load robots_tags %}
 
-{% get_categories as robots_categories %}
-
 <nav>
-    {% for cat in robots_categories %}
-        <a href="{% url 'category' cat.id %}">{{ cat.name }}</a>
+    {% for cat in cats %}
+        <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
         {% if not forloop.last %} | {% endif %}
     {% endfor %}
 </nav>

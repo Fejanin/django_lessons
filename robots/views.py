@@ -2,8 +2,7 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
-from .models import Robot
-
+from .models import Robot, Category
 
 menu = [
     {'title': 'О сайте', 'url_name': 'about'},
@@ -31,13 +30,6 @@ data_db = [
         'content': 'Самый крупный из манипуляторов Universal Robots и это коллаборативный робот, проще говоря — он создан для работы с другим оборудованием и помощи в работе человеку.',
         'is_published': True
     },
-]
-
-cat_db = [
-    {'id': 1, 'name': 'Промышленные'},
-    {'id': 2, 'name': 'Гуманоидные'},
-    {'id': 3, 'name': 'Анималистичные'},
-    {'id': 4, 'name': 'Летательные'},
 ]
 
 def index(request):
@@ -82,12 +74,14 @@ def login(request):
     return HttpResponse('Авторизация.')
 
 
-def show_category(request, cat_id):
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    posts = Robot.published.filter(cat_id=category.pk)
     data = {
-        'title': 'Главная страница о роботах.',
+        'title': f'Рубрика: {category.name}',
         'menu': menu,
-        'posts': data_db,
-        'cat_selected': cat_id,
+        'posts': posts,
+        'cat_selected': category.pk,
     }
     return render(request, 'robots/index.html', context=data)
 

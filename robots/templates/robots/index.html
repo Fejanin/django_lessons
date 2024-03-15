@@ -5,6 +5,10 @@
     <ul>
         {% for p in posts %}
             <li>
+                <div>
+                    <p>Категория: {{ p.cat.name }}</p>
+                    <p>Дата: {{ p.time_update|date:"d-m-Y H:i:s" }}</p>
+                </div>
                 <h2>{{ p.title }}</h2>
                 {% autoescape off %}
                 <p>{{ p.content|linebreaks|truncatewords:10 }}</p>
@@ -12,7 +16,7 @@
                 <p><a href="{{ p.get_absolute_url }}">Читать пост</a></p>
                 {% if not forloop.last %}
                     <hr>
-                {% endif %}k
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
