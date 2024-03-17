@@ -10,6 +10,8 @@
 </head>
 <body>
     {% show_categories cat_selected %}
+    <hr>
+    <hr>
     <ul>
         <li>
             <a href="{% url 'home' %}">Главная страница о роботах</a>
@@ -20,7 +22,11 @@
             </li>
         {% endfor %}
     </ul>
+    <hr>
+    <hr>
     {% block content %} {% endblock %}
+    <hr>
+    <hr>
     {% show_all_tags %}
 </body>
 </html>
