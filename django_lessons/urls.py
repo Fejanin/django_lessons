@@ -22,6 +22,7 @@ from robots.views import page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('robots.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 
