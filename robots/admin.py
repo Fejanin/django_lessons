@@ -1,5 +1,18 @@
 from django.contrib import admin
-from .models import Robot
+from .models import Robot, Category
 
 
-admin.site.register(Robot)
+@admin.register(Robot)
+class RobotAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'time_create', 'is_published', 'cat')
+    list_display_links = ('id', 'title')
+    ordering = ['-time_create', 'title']
+    list_editable = ('is_published', 'cat',)
+    list_per_page = 3
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+    list_display_links = ('id', 'name')
+
