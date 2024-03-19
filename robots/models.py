@@ -26,7 +26,9 @@ class Robot(models.Model):
     def __str__(self):
         return self.title
 
-    class Mets:
+    class Meta:
+        verbose_name = 'Робот'
+        verbose_name_plural = 'Роботы'
         ordering = ['-time_create']
         indexes = [
             models.Index(fields=['-time_create'])
