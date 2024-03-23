@@ -3,3 +3,4 @@ media/
 *.log
 *.pyc
 __pycache__/
+*.jpeg

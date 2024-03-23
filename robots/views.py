@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 
-from .forms import AddPostForm
+from .forms import AddPostForm, UploadFileForm
 from .models import Robot, Category, TagPost
 
 menu = [
@@ -24,10 +24,23 @@ def index(request):
     return render(request, 'robots/index.html', context=data)
 
 
+def handle_uploaded_file(f):
+    with open(f'upload/{f.name}', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
 def about(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(form.cleaned_data['file'])
+    else:
+        form = UploadFileForm()
     data = {
         'title': 'О нас',
         'menu': menu,
+        'form': form,
     }
     return render(request, 'robots/about.html', context=data)
 
