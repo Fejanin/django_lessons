@@ -8,3 +8,7 @@
 .selected {
     color: red;
 }
+
+ul {
+    padding: 20px;
+}
