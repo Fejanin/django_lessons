@@ -2,6 +2,8 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
+from django.views import View
+from django.views.generic import TemplateView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Robot, Category, TagPost, UploadFiles
@@ -24,7 +26,25 @@ def index(request):
     return render(request, 'robots/index.html', context=data)
 
 
-# def handle_uploaded_file(f):
+class RodotHome(TemplateView):
+    template_name = 'robots/index.html'
+    extra_context = {
+        'title': 'Главная страница о роботах.',
+        'menu': menu,
+        'posts': Robot.published.all().select_related('cat'),  # оптимизация SQL запросов
+        'cat_selected': 0,
+    }
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['title'] = 'Главная страница о роботах.'
+    #     context['menu'] = menu
+    #     context['posts'] = Robot.published.all().select_related('cat')  # оптимизация SQL запросов
+    #     context['cat_selected'] = int(self.request.GET.get('cat_id', 0))
+    #     return context
+
+
+        # def handle_uploaded_file(f):
 #     with open(f'upload/{f.name}', 'wb+') as destination:
 #         for chunk in f.chunks():
 #             destination.write(chunk)
@@ -79,6 +99,29 @@ def addpage(request):
         'form': form,
     }
     return render(request, 'robots/addpage.html', context=data)
+
+
+class AddPage(View):
+    def get(self, request):
+        form = AddPostForm()
+        data = {
+            'menu': menu,
+            'title': 'Добавление статьи',
+            'form': form,
+        }
+        return render(request, 'robots/addpage.html', context=data)
+
+    def post(self, request):
+        form = AddPostForm(request.POST , request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        data = {
+            'menu': menu,
+            'title': 'Добавление статьи',
+            'form': form,
+        }
+        return render(request, 'robots/addpage.html', context=data)
 
 
 def contact(request):
