@@ -1,6 +1,6 @@
 {% for cat in cats %}
   {% if cat.id == cat_selected %}
-    <p class="selected">{{ cat.name}}</p>
+    <p class="selected">{{ cat.name }}</p>
   {% else %}
     <p><a href="{{ cat.get_absolute_url }}">{{ cat.name}}</a></p>
   {% endif %}

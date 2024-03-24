@@ -9,6 +9,9 @@
                     <p>Категория: {{ p.cat.name }}</p>
                     <p>Дата: {{ p.time_update|date:"d-m-Y H:i:s" }}</p>
                 </div>
+                {% if p.photo %}
+                <p><img src="{{ p.photo.url }}" width="300"></p>
+                {% endif %}
                 <h2>{{ p.title }}</h2>
                 {% autoescape off %}
                 <p>{{ p.content|linebreaks|truncatewords:10 }}</p>
