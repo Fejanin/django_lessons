@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Robot, Category, TagPost, UploadFiles
@@ -71,15 +71,31 @@ def about(request):
     return render(request, 'robots/about.html', context=data)
 
 
-def show_post(request, post_slug):
-    post = get_object_or_404(Robot, slug=post_slug)
-    data = {
-        'title': 'Главная страница о роботах.',
-        'menu': menu,
-        'post': post,
-        'cat_selected': Robot.objects.get(slug=request.path.split('/')[-2]).cat_id,
-    }
-    return render(request, 'robots/post.html', context=data)
+# def show_post(request, post_slug):
+#     post = get_object_or_404(Robot, slug=post_slug)
+#     data = {
+#         'title': 'Главная страница о роботах.',
+#         'menu': menu,
+#         'post': post,
+#         'cat_selected': Robot.objects.get(slug=request.path.split('/')[-2]).cat_id,
+#     }
+#     return render(request, 'robots/post.html', context=data)
+
+
+class ShowPost(DetailView):
+    # model = Robot
+    template_name = 'robots/post.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['post'].title
+        context['menu'] = menu
+        return context
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Robot.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
 # def addpage(request):
@@ -164,18 +180,33 @@ class RobotCategory(ListView):
         return context
 
 
-def show_tag_postlist(request, tag_slug):
-    tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Robot.Status.PUBLISHED).select_related('cat')  # оптимизация SQL запросов
-    data = {
-        'title': f'Тег: {tag.tag}',
-        'menu': menu,
-        'posts': posts,
-        'cat_selected': None,
-    }
-    return render(request, 'robots/index.html', context=data)
+# def show_tag_postlist(request, tag_slug):
+#     tag = get_object_or_404(TagPost, slug=tag_slug)
+#     posts = tag.tags.filter(is_published=Robot.Status.PUBLISHED).select_related('cat')  # оптимизация SQL запросов
+#     data = {
+#         'title': f'Тег: {tag.tag}',
+#         'menu': menu,
+#         'posts': posts,
+#         'cat_selected': None,
+#     }
+#     return render(request, 'robots/index.html', context=data)
 
 
+class TagPostList(ListView):
+    template_name = 'robots/index.html'
+    context_object_name = 'posts'
+    allow_empty = False
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = TagPost.objects.get(slug=self.kwargs['tag_slug'])
+        context['title'] = 'Тег: ' + tag.tag
+        context['menu'] = menu
+        context['cat_selected'] = None
+        return context
+
+    def get_queryset(self):
+        return Robot.published.filter(tags__slug=self.kwargs['tag_slug']).select_related('cat')
 
 
 def page_not_found(request, exception):
