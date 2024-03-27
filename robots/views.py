@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -21,20 +22,14 @@ class RodotHome(DataMixin, ListView):  # миксины добавляются �
 
 
 def about(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            # handle_uploaded_file(form.cleaned_data['file'])
-            fp = UploadFiles(file=form.cleaned_data['file'])
-            fp.save()
-    else:
-        form = UploadFileForm()
-    data = {
-        'title': 'О нас',
-        # 'menu': menu,
-        'form': form,
-    }
-    return render(request, 'robots/about.html', context=data)
+    contact_list = Robot.published.all()
+    paginator = Paginator(contact_list, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'robots/about.html', {
+        'title': 'О сайте',
+        'page_obj': page_obj,
+    })
 
 
 class ShowPost(DataMixin, DetailView):  # миксины добавляются первыми
