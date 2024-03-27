@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Robot, Category, TagPost, UploadFiles
@@ -121,18 +121,27 @@ class ShowPost(DetailView):
 #     return render(request, 'robots/addpage.html', context=data)
 
 
-class AddPage(FormView):
-    form_class = AddPostForm  # создавать объект класса не нужно
+class AddPage(CreateView):
+    form_class = AddPostForm
+    # model = Robot  # с классом CreateView
+    # fields = '__all__'  # если нужно отображать не все поля ==> используй список # с классом CreateView
     template_name = 'robots/addpage.html'
-    success_url = reverse_lazy('home')  # создает маршрут не сразу, а только в момент вызова
+    # success_url = reverse_lazy('home')   # по умолчанию найдет маршрут по ф-ции get_absolute_url ==> произойдет переход на созданную статью
     extra_context = {
         'menu': menu,
         'title': 'Добавление статьи',
     }
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+
+class UpdatePage(UpdateView):
+    model = Robot
+    fields = '__all__'  # если нужно отображать не все поля ==> используй список
+    template_name = 'robots/addpage.html'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'menu': menu,
+        'title': 'Редактирование статьи',
+    }
 
 
 # class AddPage(View):
