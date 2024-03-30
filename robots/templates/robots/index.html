@@ -7,6 +7,7 @@
             <li>
                 <div>
                     <p>Категория: {{ p.cat.name }}</p>
+                    <p>Автор: {{ p.author.username|default:"Автор неизвестен" }}</p>
                     <p>Дата: {{ p.time_update|date:"d-m-Y H:i:s" }}</p>
                 </div>
                 {% if p.photo %}

@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -21,6 +23,7 @@ class RodotHome(DataMixin, ListView):  # миксины добавляются �
         return Robot.published.all().select_related('cat')  # оптимизация SQL запросов
 
 
+@login_required  # можно передать в качестве аргумента адрес переадресации для неавторизованных пользователей (login_url='/path_redirect/')
 def about(request):
     contact_list = Robot.published.all()
     paginator = Paginator(contact_list, 5)
@@ -45,10 +48,16 @@ class ShowPost(DataMixin, DetailView):  # миксины добавляются 
         return get_object_or_404(Robot.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
-class AddPage(DataMixin, CreateView):
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'robots/addpage.html'
     title_page = 'Добавление статьи'
+    # login_url = '/admin/'  # можно указать альтернативный адрес переадрисации, для неавторизованных пользователей
+
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
 
 
 class UpdatePage(DataMixin, UpdateView):
