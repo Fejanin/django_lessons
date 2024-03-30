@@ -26,3 +26,27 @@
     {% include 'robots/includes/nav.html' %}
 
 {% endblock %}
+
+{% block breadcrumbs %}
+    {% if page_obj.has_other_pages %}
+        <nav>
+            <ul>
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                {% endif %}
+                {% for p in paginator.page_range %}
+                    {% if page_obj.number == p %}
+                        <li>{{ p }}</li>
+                    {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                        <li>
+                            <a href="?page={{ p }}">{{ p }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock %}
