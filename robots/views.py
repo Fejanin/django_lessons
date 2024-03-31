@@ -1,5 +1,5 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -48,11 +48,12 @@ class ShowPost(DataMixin, DetailView):  # миксины добавляются 
         return get_object_or_404(Robot.published, slug=self.kwargs[self.slug_url_kwarg])
 
 
-class AddPage(LoginRequiredMixin, DataMixin, CreateView):
+class AddPage(PermissionRequiredMixin, LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'robots/addpage.html'
     title_page = 'Добавление статьи'
     # login_url = '/admin/'  # можно указать альтернативный адрес переадрисации, для неавторизованных пользователей
+    permission_required = 'robots.add_robot'  # 'приложение.add_таблица'
 
     def form_valid(self, form):
         w = form.save(commit=False)
@@ -60,14 +61,16 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         return super().form_valid(form)
 
 
-class UpdatePage(DataMixin, UpdateView):
+class UpdatePage(PermissionRequiredMixin, DataMixin, UpdateView):
     model = Robot
     fields = '__all__'  # если нужно отображать не все поля ==> используй список
     template_name = 'robots/addpage.html'
     success_url = reverse_lazy('home')
     title_page = 'Редактирование статьи'
+    permission_required = 'robots.change_robot'  # 'приложение.change_таблица'
 
 
+@permission_required(perm='robots.view_robot', raise_exception=True)  # для фукнкций
 def contact(request):
     return HttpResponse('Обратная связь.')
 
