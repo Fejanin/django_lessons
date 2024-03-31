@@ -151,3 +151,14 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'users.authentication.EmailAuthBackend',
 ]
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# from django.core.mail import send_mail
+'''
+"from user1",
+... "Yes!!!!!!!!",
+... "root@site.com",
+... ["you_email@.mail.com"],
+... )
+'''
+# реализация отправки писем через консоль
